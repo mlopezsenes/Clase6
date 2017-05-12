@@ -30,27 +30,39 @@ public class ThreadConexion implements Runnable{
 
         Message msg = new Message();
 
-        HttpManager httpManager = new HttpManager(url);
+//        HttpManager httpManager = new HttpManager(url);
         try{
 
-            if(flagBytesString)
-            {
+            HttpConection httpConection = new HttpConection();
+            if(flagBytesString) {
                 byte[] bytesRespuesta;
-                bytesRespuesta = httpManager.getBytesDataByGET();
+                bytesRespuesta =httpConection.getBytesDataByGET(url);
                 msg.arg1=1;
                 msg.obj=bytesRespuesta;
-            }
-            else
-            {
+            }else{
                 String strRespuesta;
-                strRespuesta = httpManager.getStrDataByGET();
+                strRespuesta = httpConection.getStringDataByPost(url);
                 msg.arg1=2;
                 msg.obj=strRespuesta;
             }
+//            if(flagBytesString)
+//            {
+//                byte[] bytesRespuesta;
+//                bytesRespuesta = httpManager.getBytesDataByGET();
+//                msg.arg1=1;
+//                msg.obj=bytesRespuesta;
+//            }
+//            else
+//            {
+//                String strRespuesta;
+//                strRespuesta = httpManager.getStrDataByGET();
+//                msg.arg1=2;
+//                msg.obj=strRespuesta;
+//            }
 
         }catch(Exception e)
         {
-            Log.d("http","ERROR");
+            Log.d("http","ERROR "+e.getMessage());
             msg.arg1=0;
         }
 
