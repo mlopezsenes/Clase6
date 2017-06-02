@@ -32,7 +32,7 @@ public class ThreadConexion implements Runnable{
 
 //        HttpManager httpManager = new HttpManager(url);
         try{
-
+//http://www.lslutnfra.com/alumnos/practicas/listaPersonas.xml
             HttpConection httpConection = new HttpConection();
             if(flagBytesString) {
                 byte[] bytesRespuesta;
@@ -43,7 +43,8 @@ public class ThreadConexion implements Runnable{
                 String strRespuesta;
                 strRespuesta = httpConection.getStringDataByPost(url);
                 msg.arg1=2;
-                msg.obj=strRespuesta;
+
+                msg.obj= XmlParser.obtenerPersonas(strRespuesta);
             }
 //            if(flagBytesString)
 //            {

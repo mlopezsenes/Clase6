@@ -13,6 +13,8 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.List;
+
 
 public class MainActivity extends AppCompatActivity implements Handler.Callback {
 
@@ -29,13 +31,13 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
         Handler h = new Handler(this);
 
         // flag en true para recibir bytes
-        ThreadConexion tc = new ThreadConexion(h,"http://www.pngmart.com/files/2/Mario-PNG-Image.png",true);
+ /*       ThreadConexion tc = new ThreadConexion(h,"http://www.pngmart.com/files/2/Mario-PNG-Image.png",true);
         Thread t = new Thread(tc);
-        t.start();
+        t.start();*/
         //________________________________
 
         // flag en false para recibir un string
-        ThreadConexion tc2 = new ThreadConexion(h,"http://localhost:1337/login",false);
+        ThreadConexion tc2 = new ThreadConexion(h,"http://www.lslutnfra.com/alumnos/practicas/listaPersonas.xml",false);
         Thread t2 = new Thread(tc2);
         t2.start();
         //_____________________________________
@@ -55,14 +57,20 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
             case 1:{
                 Log.d("activity","Recibiendo bytes (imagen)");
                 byte[] bytes = (byte[]) msg.obj;
+
                 Bitmap bitmap =
                         BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
                 img.setImageBitmap(bitmap);
                 break;
             }
+            //http://www.lslutnfra.com/alumnos/practicas/listaPersonas.xml
             case 2:{
                 Log.d("activity","Recibiendo string (xml)");
-                txt.setText((String) msg.obj);
+                List<Persona> personas = (List<Persona>) msg.obj;
+                for(Persona p :personas){
+                    Log.d("Persona",p.getNombre()+" "+p.getEdad());
+                }
+                txt.setText(personas.get(0).getNombre());
                 break;
             }
         }
