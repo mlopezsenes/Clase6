@@ -2,6 +2,7 @@ package com.lslutnfra.ejerciciohttp;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.ActionBarActivity;
@@ -12,6 +13,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 
 public class MainActivity extends AppCompatActivity implements Handler.Callback {
@@ -29,13 +33,26 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
         Handler h = new Handler(this);
 
         // flag en true para recibir bytes
-        ThreadConexion tc = new ThreadConexion(h,"http://www.pngmart.com/files/2/Mario-PNG-Image.png",true);
+        ThreadConexion tc = new ThreadConexion(h,"http://www.pngmart.com/files/2/Mario-PNG-Image.png",true,"GET");
         Thread t = new Thread(tc);
         t.start();
         //________________________________
 
         // flag en false para recibir un string
-        ThreadConexion tc2 = new ThreadConexion(h,"http://localhost:1337/login",false);
+        //ThreadConexion tc2 = new ThreadConexion(h,"http://192.168.0.30:3000/usuarios/",false, "GET");
+        ThreadConexion tc2 = new ThreadConexion(h,"http://192.168.0.30:3000/usuarios/nuevo",false, "POST");
+        JSONObject  datos = new JSONObject();
+        try {
+            datos.put("nombre","Pablo");
+            datos.put("apellido","perez");
+            datos.put("dni","25622121");
+            datos.put("mail", "Real");
+            datos.put("clave", "true");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        tc2.setDatos(datos);
         Thread t2 = new Thread(tc2);
         t2.start();
         //_____________________________________

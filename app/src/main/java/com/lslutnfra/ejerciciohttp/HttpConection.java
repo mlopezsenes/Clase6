@@ -1,12 +1,19 @@
 package com.lslutnfra.ejerciciohttp;
 
+import android.net.Uri;
 import android.util.Log;
 
+import org.json.JSONObject;
+
+import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 
 /**
  * Created by alumno on 11/05/2017.
@@ -14,11 +21,30 @@ import java.net.URL;
 
 public class HttpConection {
 
-    public byte[] getBytesDataByGET(String strUrl) throws IOException {
+    public HttpConection(String metodo) {
+        this.metodo = metodo;
+    }
+
+    private String metodo;
+
+    public JSONObject getDatos() {
+        return datos;
+    }
+
+    public void setDatos(JSONObject datos) {
+        this.datos = datos;
+    }
+
+    private JSONObject datos;
+    private String Header;
+
+
+
+    public byte[] getBytesData(String strUrl) throws IOException {
         URL url = new URL(strUrl);
         HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
 
-        urlConnection.setRequestMethod("GET");
+        urlConnection.setRequestMethod(this.metodo);
         urlConnection.connect();
         int response = urlConnection.getResponseCode();
         Log.d("http", "Response code:" + response);
@@ -37,12 +63,24 @@ public class HttpConection {
             throw new IOException();
     }
 
-    public String getStringDataByPost(String strUrl) throws IOException {
+    public String getStringData(String strUrl) throws IOException {
         URL url = new URL(strUrl);
         HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
 
-        urlConnection.setRequestMethod("POST");
-        urlConnection.connect();
+        urlConnection.setRequestMethod(this.metodo);
+        if (this.metodo == "POST"){
+            urlConnection.setDoOutput(true);
+            urlConnection.setRequestProperty("Content-Type","application/json");
+            urlConnection.setRequestProperty("Host", "android.schoolportal.gr");
+
+            OutputStream os = urlConnection.getOutputStream();
+            byte[] outputInBytes = this.datos.toString().getBytes("UTF-8");
+            os.write( outputInBytes );
+            Log.d("HC",this.datos.toString());
+            os.close();
+        } else {
+            urlConnection.connect();
+        }
         int response = urlConnection.getResponseCode();
         Log.d("http", "Response code:" + response);
         if(response==200) {
